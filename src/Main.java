@@ -4,6 +4,7 @@ public class Main {
         System.out.println("Поехали!");
         System.out.println("Tets commit!");
         System.out.println("Tets commit!");
+        System.out.println("Tets commit!");
     }
 }
 
