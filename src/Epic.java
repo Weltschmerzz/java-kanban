@@ -6,11 +6,18 @@ public class Epic {
     String epicDescription;
     TaskStatus epicStatus;
 
-    public Epic(int epicId, String epicName, String epicDescription, TaskStatus epicStatus) {
+    public Epic(String epicName, String epicDescription) {
         this.epicDescription = epicDescription;
-        this.epicId = epicId;
         this.epicName = epicName;
-        this.epicStatus = epicStatus;
+        this.epicStatus = TaskStatus.NEW;
+    }
+
+    public void setEpicId(int epicId) {
+        this.epicId = epicId;
+    }
+
+    public int getEpicId() {
+        return epicId;
     }
 
     @Override

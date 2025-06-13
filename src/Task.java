@@ -8,14 +8,20 @@ public class Task {
     TaskStatus taskStatus;
 
 
-    public Task(int taskId, String taskName, String taskDescription, TaskStatus taskStatus) {
+    public Task(String taskName, String taskDescription, TaskStatus taskStatus) {
         this.taskDescription = taskDescription;
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskStatus = taskStatus;
     }
 
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
 
+    public int getTaskId() {
+        return taskId;
+    }
 
     @Override
     public String toString() {

@@ -7,15 +7,26 @@ public class SubTask extends Epic {
     String subtaskDescription;
     TaskStatus subtaskStatus;
 
-    public SubTask(Epic epic, int subtaskId, String subtaskName, String subtaskDescription, TaskStatus subtaskStatus) {
-        super(epic.epicId, epic.epicName, epic.epicDescription, epic.epicStatus);
+    public SubTask(Epic epic, String subtaskName, String subtaskDescription, TaskStatus subtaskStatus) {
+        super(epic.epicName, epic.epicDescription);
         this.epicId = epic.epicId;
         this.subtaskDescription = subtaskDescription;
-        this.subtaskId = subtaskId;
         this.subtaskName = subtaskName;
         this.subtaskStatus = subtaskStatus;
     }
 
+    public void setSubtaskId(int subtaskId) {
+        this.subtaskId = subtaskId;
+    }
+
+    public int getSubtaskId() {
+        return subtaskId;
+    }
+
+    @Override
+    public int getEpicId() {
+        return epicId;
+    }
 
     @Override
     public String toString() {
