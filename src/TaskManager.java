@@ -180,7 +180,7 @@ public class TaskManager {
 
         for (SubTask sTask : subTaskList.values()) {
             if (sTask.epicId == epicId) {
-                System.out.println(sTask.toString());
+                System.out.println(sTask);
                 hasEpicSubTask = true;
             }
         }
