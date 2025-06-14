@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class TaskManager {
    private int id = 0;
-   //я понимаю, что лучше мапы сделать private и получать их через get() и set() для проверок в main.
+
    private HashMap<Integer, Task> taskList;
    private HashMap<Integer, Epic> epicList;
    private HashMap<Integer, SubTask> subTaskList;
