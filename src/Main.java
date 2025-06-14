@@ -288,7 +288,6 @@ public class Main {
                     String status = scanner.nextLine();
                     TaskStatus state = TaskStatus.valueOf(status);
                     tm.changeStatus(id, state);
-
                 }
                 case 7 -> {
                     return;
