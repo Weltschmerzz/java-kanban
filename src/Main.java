@@ -351,9 +351,7 @@ public class Main {
                 case 3 -> {
                     return TaskStatus.DONE;
                 }
-                default -> {
-                    System.out.println("Неверное значение статуса. Повторите попытку.");
-                }
+                default -> System.out.println("Неверное значение статуса. Повторите попытку.");
             }
         }
     }

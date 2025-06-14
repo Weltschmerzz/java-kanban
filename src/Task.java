@@ -10,7 +10,6 @@ public class Task {
 
     public Task(String taskName, String taskDescription, TaskStatus taskStatus) {
         this.taskDescription = taskDescription;
-        this.taskId = taskId;
         this.taskName = taskName;
         this.taskStatus = taskStatus;
     }
