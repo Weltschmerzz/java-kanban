@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 public class TaskManager {
    private int id = 0;
-   //я понимаю, что лучше их сделать мапы private, но тогда поедет много проверок в main.
-   protected HashMap<Integer, Task> taskList;
-   protected HashMap<Integer, Epic> epicList;
-   protected HashMap<Integer, SubTask> subTaskList;
+   //я понимаю, что лучше мапы сделать private и получать их через get() и set() для проверок в main.
+   HashMap<Integer, Task> taskList;
+   HashMap<Integer, Epic> epicList;
+   HashMap<Integer, SubTask> subTaskList;
 
 
    public TaskManager() {
