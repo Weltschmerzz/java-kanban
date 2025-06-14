@@ -1,12 +1,10 @@
 package ru.yandex.practicum.TaskTracker.src;
 
-
 public class Task {
     int taskId;
     String taskName;
     String taskDescription;
     TaskStatus taskStatus;
-
 
     public Task(String taskName, String taskDescription, TaskStatus taskStatus) {
         this.taskDescription = taskDescription;

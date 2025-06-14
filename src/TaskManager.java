@@ -50,7 +50,7 @@ public class TaskManager {
         int countNewStatus = 0;
         int countDoneStatus = 0;
 
-        for (SubTask subTask : subTaskList.values()) {   // Если все subtask NEW
+        for (SubTask subTask : subTaskList.values()) {
             if (subTask.epicId == epicId) {
                 countSubTask++;
                 if (subTask.subtaskStatus.equals(TaskStatus.NEW)) {
@@ -73,7 +73,7 @@ public class TaskManager {
     }
 
 
-    public HashMap<Integer, Task> getTaskList() { //Получить список задач
+    public HashMap<Integer, Task> getTaskList() {
         if (taskList.isEmpty()) {
             System.out.println("Список задач пуст!");
             System.out.println("*".repeat(25));
@@ -114,7 +114,7 @@ public class TaskManager {
         return subTaskForOneEpic;
     }
 
-    public void clearTaskList() {  //Удалить все задачи из списка
+    public void clearTaskList() {
         taskList.clear();
         System.out.println("Все задачи удалены!");
         System.out.println("*".repeat(25));
