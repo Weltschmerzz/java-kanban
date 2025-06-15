@@ -1,32 +1,60 @@
 package ru.yandex.practicum.TaskTracker.src;
 
+import java.util.Objects;
+
 public class Task {
-    int taskId;
-    String taskName;
-    String taskDescription;
-    TaskStatus taskStatus;
 
-    public Task(String taskName, String taskDescription, TaskStatus taskStatus) {
-        this.taskDescription = taskDescription;
-        this.taskName = taskName;
-        this.taskStatus = taskStatus;
+    private int id;
+    private final String name;
+    private final String description;
+     TaskStatus status;
+
+    protected Task(String name, String description, TaskStatus status) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
     }
 
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
+    public int getId() {
+        return id;
     }
 
-    public int getTaskId() {
-        return taskId;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, status);
     }
 
     @Override
     public String toString() {
-        return "Task{" +
-                "taskId=" + taskId +
-                ", taskName='" + taskName + '\'' +
-                ", taskDescription='" + taskDescription + '\'' +
-                ", taskStatus=" + taskStatus +
+        return "{" +
+                "Id=" + id +
+                ", Name='" + name + '\'' +
+                ", Description='" + description + '\'' +
+                ", Status=" + status +
                 '}';
     }
 }

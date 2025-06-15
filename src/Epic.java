@@ -1,32 +1,13 @@
 package ru.yandex.practicum.TaskTracker.src;
 
-public class Epic {
-    int epicId;
-    String epicName;
-    String epicDescription;
-    TaskStatus epicStatus;
+public class Epic extends Task {
 
-    public Epic(String epicName, String epicDescription) {
-        this.epicDescription = epicDescription;
-        this.epicName = epicName;
-        this.epicStatus = TaskStatus.NEW;
+    public Epic(String name, String description) {
+        super(name, description, TaskStatus.NEW);
     }
 
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
-    }
-
-    public int getEpicId() {
-        return epicId;
-    }
-
-    @Override
-    public String toString() {
-        return "Epic{" +
-                "epicId=" + epicId +
-                ", epicName='" + epicName + '\'' +
-                ", epicDescription='" + epicDescription + '\'' +
-                ", epicStatus=" + epicStatus +
-                '}';
+    protected void updateStatus(TaskStatus status) {
+        this.status = status;
     }
 }
+

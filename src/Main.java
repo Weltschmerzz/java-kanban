@@ -1,17 +1,12 @@
 package ru.yandex.practicum.TaskTracker.src;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
-
 
 public class Main {
 
     public static void main(String[] args) {
         TaskManager tm = new TaskManager();
         Scanner scanner = new Scanner(System.in);
-
-        //TestDataInitializer.initializeTestData(tm);  // заполнение тестовыми данными
 
         while (true) {
             printMenu();
@@ -35,7 +30,7 @@ public class Main {
                             break;
                         }
                         epicId = getEpicId(scanner);
-                        if (!tm.getEpicList().containsKey(epicId)) {
+                        if (!tm.getEpicList().contains(tm.getEpicById(epicId))) {
                             System.out.println("Эпик с ID:" + epicId + " не найден.");
                             System.out.println("*".repeat(25));
                             break;
@@ -67,13 +62,12 @@ public class Main {
                         taskType = selectTaskType(scanner);
                     }
                     if (taskType == TaskType.TASK) {
-                        HashMap<Integer, Task> taskList = tm.getTaskList();
-                        for (Task task : taskList.values()) {
+
+                        for (Task task : tm.getTaskList()) {
                             System.out.println(task);
                         }
                     } else if (taskType == TaskType.EPIC) {
-                        HashMap<Integer, Epic> epicList = tm.getEpicList();
-                        for (Epic epic : epicList.values()) {
+                        for (Epic epic : tm.getEpicList()) {
                             System.out.println(epic);
                         }
                     } else if (taskType == TaskType.SUBTASK) {
@@ -89,18 +83,17 @@ public class Main {
                                 break;
                             }
                             int epicId = getEpicId(scanner);
-                            if (!tm.getEpicList().containsKey(epicId)) {
+                            if (!tm.getEpicList().contains(tm.getEpicById(epicId))) {
                                 System.out.println("Эпик с ID:" + epicId + " не найден.");
                                 System.out.println("*".repeat(25));
                                 break;
                             }
-                            ArrayList<SubTask> subTasksList = tm.getSubTaskListByEpic(epicId);
-                            for (SubTask subTask : subTasksList) {
+                            for (SubTask subTask : tm.getSubTaskListByEpic(epicId)) {
                                 System.out.println(subTask);
                             }
                         } else if (select == 2) {
-                            HashMap<Integer, SubTask> subTaskList = tm.getSubTaskList();
-                            for (SubTask subTask : subTaskList.values()) {
+
+                            for (SubTask subTask : tm.getSubTaskList()) {
                                 System.out.println(subTask);
                             }
                         }
@@ -139,7 +132,7 @@ public class Main {
                             tm.clearSubTaskList();
                         } else if (select == 2) {
                             int epicId = getEpicId(scanner);
-                            if (!tm.getEpicList().containsKey(epicId)) {
+                            if (!tm.getEpicList().contains(tm.getEpicById(epicId))) {
                                 System.out.println("Эпик с ID:" + epicId + " не найден.");
                                 System.out.println("*".repeat(25));
                                 break;
@@ -157,7 +150,7 @@ public class Main {
 
                     if (taskType == TaskType.TASK) {
                         int taskId = getTaskId(scanner);
-                        if (!tm.getTaskList().containsKey(taskId)) {
+                        if (!tm.getTaskList().contains(tm.getTaskById(taskId))) {
                             System.out.println("Задача с ID:" + taskId + " не найден.");
                             System.out.println("*".repeat(25));
                             break;
@@ -165,7 +158,7 @@ public class Main {
                         System.out.println(tm.getTaskById(taskId));
                     } else if (taskType == TaskType.EPIC) {
                         int epicId = getEpicId(scanner);
-                        if (!tm.getEpicList().containsKey(epicId)) {
+                        if (!tm.getEpicList().contains(tm.getEpicById(epicId))) {
                             System.out.println("Эпик с ID:" + epicId + " не найден.");
                             System.out.println("*".repeat(25));
                             break;
@@ -173,7 +166,7 @@ public class Main {
                         System.out.println(tm.getEpicById(epicId));
                     } else if (taskType == TaskType.SUBTASK) {
                         int subTaskId = getSubTaskId(scanner);
-                        if (!tm.getSubTaskList().containsKey(subTaskId)) {
+                        if (!tm.getSubTaskList().contains(tm.getSubTaskById(subTaskId))) {
                             System.out.println("Подзадача с ID:" + subTaskId + " не найдена.");
                             System.out.println("*".repeat(25));
                             break;
@@ -190,7 +183,7 @@ public class Main {
 
                     if (taskType == TaskType.TASK) {
                         int taskId = getTaskId(scanner);
-                        if (!tm.getTaskList().containsKey(taskId)) {
+                        if (!tm.getTaskList().contains(tm.getTaskById(taskId))) {
                             System.out.println("Задача с ID:" + taskId + " не найден.");
                             System.out.println("*".repeat(25));
                             break;
@@ -202,12 +195,12 @@ public class Main {
                         String taskDesc = scanner.nextLine();
                         TaskStatus taskStatus = selectTaskStatus(scanner);
                         Task updatedTask = new Task(taskName, taskDesc, taskStatus);
-                        updatedTask.setTaskId(taskId);
+                        updatedTask.setId(taskId);
                         tm.updateTask(updatedTask);
 
                     } else if (taskType == TaskType.EPIC) {
                         int epicId = getEpicId(scanner);
-                        if (!tm.getEpicList().containsKey(epicId)) {
+                        if (!tm.getEpicList().contains(tm.getEpicById(epicId))) {
                             System.out.println("Эпик с ID:" + epicId + " не найден.");
                             System.out.println("*".repeat(25));
                             break;
@@ -217,12 +210,12 @@ public class Main {
                         System.out.print("Введите новое описание эпика: ");
                         String epicDesc = scanner.nextLine();
                         Epic updatedEpic = new Epic(epicName, epicDesc);
-                        updatedEpic.setEpicId(epicId);
+                        updatedEpic.setId(epicId);
                         tm.updateEpic(updatedEpic);
 
                     } else if (taskType == TaskType.SUBTASK) {
                         int subTaskId = getSubTaskId(scanner);
-                        if (!tm.getSubTaskList().containsKey(subTaskId)) {
+                        if (!tm.getSubTaskList().contains(tm.getSubTaskById(subTaskId))) {
                             System.out.println("Подзадача с ID:" + subTaskId + " не найдена.");
                             System.out.println("*".repeat(25));
                             break;
@@ -234,7 +227,7 @@ public class Main {
                         TaskStatus subTaskStatus = selectTaskStatus(scanner);
                         SubTask updatedSubTask = new SubTask(tm.getEpicById(tm.getSubTaskById(subTaskId).getEpicId()),
                                 subTaskName, subTaskDesc, subTaskStatus);
-                        updatedSubTask.setSubtaskId(subTaskId);
+                        updatedSubTask.setId(subTaskId);
                         tm.updateSubTask(updatedSubTask);
                     }
                 }
@@ -246,7 +239,7 @@ public class Main {
                     }
                     if (taskType == TaskType.TASK) {
                         int taskId = getTaskId(scanner);
-                        if (!tm.getTaskList().containsKey(taskId)) {
+                        if (!tm.getTaskList().contains(tm.getTaskById(taskId))) {
                             System.out.println("Задача с ID:" + taskId + " не найден.");
                             System.out.println("*".repeat(25));
                             break;
@@ -261,7 +254,7 @@ public class Main {
                         scanner.nextLine();
                         if (option == 1) {
                             int epicId = getEpicId(scanner);
-                            if (!tm.getEpicList().containsKey(epicId)) {
+                            if (!tm.getEpicList().contains(tm.getEpicById(epicId))) {
                                 System.out.println("Эпик с ID:" + epicId + " не найден.");
                                 System.out.println("*".repeat(25));
                                 break;
@@ -270,24 +263,13 @@ public class Main {
                         }
                     } else if (taskType == TaskType.SUBTASK) {
                         int subTaskId = getSubTaskId(scanner);
-                        if (!tm.getSubTaskList().containsKey(subTaskId)) {
+                        if (!tm.getSubTaskList().contains(tm.getSubTaskById(subTaskId))) {
                             System.out.println("Подзадача с ID:" + subTaskId + " не найдена.");
                             System.out.println("*".repeat(25));
                             break;
                         }
                         tm.deleteSubTask(subTaskId);
                     }
-                }
-                //отладочный метод для проверки пересчета статусов
-                case 13 -> {
-                    int id = getSubTaskId(scanner);
-                    System.out.println("Выбери статус подзадачи:");
-                    System.out.println("NEW");
-                    System.out.println("IN_PROGRESS");
-                    System.out.println("DONE");
-                    String status = scanner.nextLine();
-                    TaskStatus state = TaskStatus.valueOf(status);
-                    tm.changeStatus(id, state);
                 }
                 case 7 -> {
                     return;
