@@ -6,7 +6,7 @@ public class Epic extends Task {
         super(name, description, TaskStatus.NEW);
     }
 
-    protected void updateStatus(TaskStatus status) {
+    void updateStatus(TaskStatus status) {
         this.status = status;
     }
 }
