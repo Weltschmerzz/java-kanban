@@ -7,7 +7,7 @@ public class Task {
     private int id;
     private final String name;
     private final String description;
-     TaskStatus status;
+    private TaskStatus status;
 
     protected Task(String name, String description, TaskStatus status) {
         this.name = name;
@@ -33,6 +33,10 @@ public class Task {
 
     public String getName() {
         return name;
+    }
+
+    void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
     @Override

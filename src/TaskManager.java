@@ -34,6 +34,7 @@ public class TaskManager {
         int newSubTaskid = getTaskid();
         newSubTask.setId(newSubTaskid);
         subTaskList.put(newSubTaskid, newSubTask);
+        epicList.get(newSubTask.getEpicId()).addSubTaskId(newSubTaskid);
         epicStatusCalculate(newSubTask.getEpicId());
     }
 
@@ -123,6 +124,7 @@ public class TaskManager {
         for (Integer i : removeCandidate) {
             subTaskList.remove(i);
         }
+        epicList.get(epicId).getSubTaskIds().clear();
         System.out.println("Все подзадачи для эпика id:" + epicId + " удалены!");
         epicStatusCalculate(epicId);
     }
@@ -156,6 +158,7 @@ public class TaskManager {
     public void deleteSubTask(int subTaskId) {
         int epicId = subTaskList.get(subTaskId).getEpicId();
         subTaskList.remove(subTaskId);
+        epicList.get(epicId).removeSubTaskId(subTaskId);
         System.out.println("Подзадача ID:" + subTaskId + " удалена.");
         System.out.println("*".repeat(25));
         epicStatusCalculate(epicId);
@@ -184,8 +187,9 @@ public class TaskManager {
         int countNewStatus = 0;
         int countDoneStatus = 0;
 
-        for (SubTask subTask : subTaskList.values()) {
-            if (subTask.getEpicId() == epicId) {
+        for (Integer subTaskId : epicList.get(epicId).getSubTaskIds()) {
+            SubTask subTask = subTaskList.get(subTaskId);
+            if (subTask != null) {
                 countSubTask++;
                 if (subTask.getStatus().equals(TaskStatus.NEW)) {
                     countNewStatus++;
@@ -194,7 +198,6 @@ public class TaskManager {
                 }
             }
         }
-
         if (countSubTask == 0) {
             calculatedStatus = TaskStatus.NEW;
         } else if (countNewStatus == countSubTask) {
@@ -202,7 +205,6 @@ public class TaskManager {
         } else if (countDoneStatus == countSubTask) {
             calculatedStatus = TaskStatus.DONE;
         }
-
-        epicList.get(epicId).updateStatus(calculatedStatus);
+        epicList.get(epicId).setStatus(calculatedStatus);
     }
 }
