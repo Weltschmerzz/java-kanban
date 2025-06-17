@@ -43,11 +43,7 @@ public class TaskManager {
             System.out.println("Список задач пуст!");
             System.out.println("*".repeat(25));
         }
-        ArrayList<Task> taskListArray = new ArrayList<>();
-        for (Task task : taskList.values()) {
-            taskListArray.add(task);
-        }
-        return taskListArray;
+        return new ArrayList<>(taskList.values());
     }
 
     public ArrayList<Epic> getEpicList() {
@@ -55,11 +51,7 @@ public class TaskManager {
             System.out.println("Список эпиков пуст!");
             System.out.println("*".repeat(25));
         }
-        ArrayList<Epic> epicListArray = new ArrayList<>();
-        for (Epic epic : epicList.values()) {
-            epicListArray.add(epic);
-        }
-        return epicListArray;
+        return new ArrayList<>(epicList.values());
     }
 
     public ArrayList<SubTask> getSubTaskList() {
@@ -67,19 +59,16 @@ public class TaskManager {
             System.out.println("Список подзадач пуст!");
             System.out.println("*".repeat(25));
         }
-        ArrayList<SubTask> subTaskListArray = new ArrayList<>();
-        for (SubTask subTask : subTaskList.values()) {
-            subTaskListArray.add(subTask);
-        }
-        return subTaskListArray;
+        return new ArrayList<>(subTaskList.values());
     }
 
     public ArrayList<SubTask> getSubTaskListByEpic(int epicId) {
         boolean hasEpicSubTask = false;
         ArrayList<SubTask> subTaskForOneEpic = new ArrayList<>();
-        for (SubTask sTask : subTaskList.values()) {
-            if (sTask.getEpicId() == epicId) {
-                subTaskForOneEpic.add(sTask);
+
+        for (Integer id : epicList.get(epicId).getSubTaskIds()) {
+            if (id != null) {
+                subTaskForOneEpic.add(subTaskList.get(id));
                 hasEpicSubTask = true;
             }
         }
@@ -95,7 +84,6 @@ public class TaskManager {
         System.out.println("Все задачи удалены!");
         System.out.println("*".repeat(25));
     }
-
 
     public void clearEpicList() {
         epicList.clear();
