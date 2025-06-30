@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager tm = new TaskManager();
+        TaskManager tm = Managers.getDefault();
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -272,6 +272,11 @@ public class Main {
                     }
                 }
                 case 7 -> {
+                    for(Task task : tm.getHistory()) {
+                        System.out.println(task);
+                    }
+                }
+                case 8 -> {
                     return;
                 }
                 default -> System.out.println("Такого пункта нет в меню.");
@@ -287,7 +292,8 @@ public class Main {
         System.out.println("4. Посмотреть задачу по ID.");
         System.out.println("5. Обновить задачу по ID.");
         System.out.println("6. Удалить задачу по ID.");
-        System.out.println("7. Выход.");
+        System.out.println("7. История просмотров.");
+        System.out.println("8. Выход.");
     }
 
     private static TaskType selectTaskType(Scanner sc) {
