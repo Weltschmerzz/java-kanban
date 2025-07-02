@@ -3,13 +3,14 @@ package ru.yandex.practicum.TaskTracker.src;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
-    private final HashMap<Integer, Task> taskList;
-    private final HashMap<Integer, Epic> epicList;
-    private final HashMap<Integer, SubTask> subTaskList;
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    private final Map<Integer, Task> taskList;
+    private final Map<Integer, Epic> epicList;
+    private final Map<Integer, SubTask> subTaskList;
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
 
     public InMemoryTaskManager() {
         taskList = new HashMap<>();
@@ -49,7 +50,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getTaskList() {
+    public List<Task> getTaskList() {
         if (taskList.isEmpty()) {
             System.out.println("Список задач пуст!");
             System.out.println("*".repeat(25));
@@ -58,7 +59,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Epic> getEpicList() {
+    public List<Epic> getEpicList() {
         if (epicList.isEmpty()) {
             System.out.println("Список эпиков пуст!");
             System.out.println("*".repeat(25));
@@ -67,7 +68,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getSubTaskList() {
+    public List<SubTask> getSubTaskList() {
         if (subTaskList.isEmpty()) {
             System.out.println("Список подзадач пуст!");
             System.out.println("*".repeat(25));
@@ -76,9 +77,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<SubTask> getSubTaskListByEpic(int epicId) {
+    public List<SubTask> getSubTaskListByEpic(int epicId) {
         boolean hasEpicSubTask = false;
-        ArrayList<SubTask> subTaskForOneEpic = new ArrayList<>();
+        List<SubTask> subTaskForOneEpic = new ArrayList<>();
 
         for (Integer id : epicList.get(epicId).getSubTaskIds()) {
             if (id != null) {
@@ -121,7 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearSubTaskListForEpic(int epicId) {
-        ArrayList<Integer> removeCandidate = new ArrayList<>();
+        List<Integer> removeCandidate = new ArrayList<>();
         for (SubTask sTask : subTaskList.values()) {
             if (sTask.getEpicId() == epicId) {
                 removeCandidate.add(sTask.getId());

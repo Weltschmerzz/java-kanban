@@ -1,10 +1,11 @@
 package ru.yandex.practicum.TaskTracker.src;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
 
-    private final ArrayList<Integer> subTaskIds = new ArrayList<>();
+    private final List<Integer> subTaskIds = new ArrayList<>();
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
@@ -14,13 +15,13 @@ public class Epic extends Task {
         subTaskIds.add(subTaskId);
     }
 
-    public void setSubTaskIds(ArrayList<Integer> copySubTaskIds) {
+    public void setSubTaskIds(List<Integer> copySubTaskIds) {
         if (copySubTaskIds != null) {
             subTaskIds.addAll(copySubTaskIds);
         }
     }
 
-    public ArrayList<Integer> getSubTaskIds() {
+    public List<Integer> getSubTaskIds() {
         return subTaskIds;
     }
 

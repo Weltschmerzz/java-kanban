@@ -1,6 +1,5 @@
 package ru.yandex.practicum.TaskTracker.src;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface TaskManager {
@@ -10,13 +9,13 @@ public interface TaskManager {
 
     void createSubTask(SubTask newSubTask);
 
-    ArrayList<Task> getTaskList();
+    List<Task> getTaskList();
 
-    ArrayList<Epic> getEpicList();
+    List<Epic> getEpicList();
 
-    ArrayList<SubTask> getSubTaskList();
+    List<SubTask> getSubTaskList();
 
-    ArrayList<SubTask> getSubTaskListByEpic(int epicId);
+    List<SubTask> getSubTaskListByEpic(int epicId);
 
     void clearTaskList();
 
