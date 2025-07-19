@@ -47,7 +47,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    public List<Task> getTask(){
+    public List<Task> getTask() {
         List<Task> history = new ArrayList<>();
         Node current = head;
         while (current != null) {
@@ -63,7 +63,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return;
         }
-        if(historyMap.containsKey(task.getId())) {
+        if (historyMap.containsKey(task.getId())) {
             remove(task.getId());
         }
         linkLast(task);
