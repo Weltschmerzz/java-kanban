@@ -37,7 +37,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubTask(SubTask newSubTask) {
-        if(newSubTask.getId() == newSubTask.getEpicId()){
+        if (newSubTask.getId() == newSubTask.getEpicId()) {
             System.out.println("Эпик не может быть собственной подзадачей");
             return;
         }
@@ -198,7 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getHistory(){
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
