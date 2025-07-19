@@ -1,4 +1,4 @@
-package ru.yandex.practicum.TaskTracker.Test;
+package ru.yandex.practicum.TaskTracker.test;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.yandex.practicum.TaskTracker.src.*;
