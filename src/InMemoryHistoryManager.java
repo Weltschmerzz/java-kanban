@@ -1,33 +1,85 @@
 package ru.yandex.practicum.TaskTracker.src;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> historyList = new ArrayList<>();
-    private final int HISTORY_SIZE = 10;
+    static class Node {
+        public Task data;
+        public Node next;
+        public Node prev;
+
+        public Node(Task data, Node next, Node prev) {
+            this.data = data;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
+    private Node head;
+    private Node tail;
+    private final Map<Integer, Node> historyMap = new HashMap<>();
+
+    public void linkLast(Task task) {
+        final Node oldTail = tail;
+        final Node newTail = new Node(task, null, oldTail);
+        tail = newTail;
+        if (oldTail == null) {
+            head = newTail;
+        } else {
+            oldTail.next = newTail;
+        }
+        historyMap.put(task.getId(), newTail);
+    }
+
+    private void removeNode(Node node) {
+        final Node prev = node.prev;
+        final Node next = node.next;
+
+        if (prev != null) {
+            prev.next = next;
+        } else {
+            head = next;
+        }
+        if (next != null) {
+            next.prev = prev;
+        } else {
+            tail = prev;
+        }
+    }
+
+    public List<Task> getTask(){
+        List<Task> history = new ArrayList<>();
+        Node current = head;
+        while (current != null) {
+            history.add(current.data);
+            current = current.next;
+        }
+        return history;
+    }
+
 
     @Override
     public void add(Task task) {
         if (task == null) {
             return;
         }
-        //Примите так, пожалуйста, я уже тесты написал, обидно удалять)
-        if(!historyList.isEmpty() && historyList.getLast().equals(task)) {
-             return;
+        if(historyMap.containsKey(task.getId())) {
+            remove(task.getId());
         }
-        if (historyList.size() == HISTORY_SIZE) {
-            historyList.removeFirst();
-        }
-        historyList.add(task);
+        linkLast(task);
     }
 
     @Override
-    public List<Task> getHistory(){
-        if(historyList.isEmpty()) {
-            System.out.println("История просмотров пуста.");
-            return historyList;
+    public void remove(int id) {
+        Node node = historyMap.remove(id);
+        if (node != null) {
+            removeNode(node);
         }
-        return historyList;
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return getTask();
     }
 }
+
