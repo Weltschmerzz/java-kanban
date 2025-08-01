@@ -1,9 +1,6 @@
 package ru.yandex.practicum.TaskTracker.src;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
@@ -37,7 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubTask(SubTask newSubTask) {
-        if(newSubTask.getId() == newSubTask.getEpicId()){
+        if (Objects.equals(newSubTask.getId(), newSubTask.getEpicId())) {
             System.out.println("Эпик не может быть собственной подзадачей");
             return;
         }
@@ -198,7 +195,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getHistory(){
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 

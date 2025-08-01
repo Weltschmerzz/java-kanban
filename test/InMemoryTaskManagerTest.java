@@ -1,4 +1,4 @@
-package ru.yandex.practicum.TaskTracker.Test;
+package ru.yandex.practicum.TaskTracker.test;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.yandex.practicum.TaskTracker.src.*;
@@ -29,7 +29,7 @@ public class InMemoryTaskManagerTest {
 
     //Проверьте, что задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера;
     @Test
-    public void shouldNotConflictManualIdAndAutomaticId(){
+    public void shouldNotConflictManualIdAndAutomaticId() {
         Task newTask = new Task("N", "D", TaskStatus.NEW);
         newTask.setId(16);
         tm.createTask(newTask);
@@ -78,15 +78,23 @@ public class InMemoryTaskManagerTest {
         assertEquals(5, tm.getSubTaskList().size());
     }
 
+    @Test
+    public void subTaskListInEpicCalculatedCorrectly() {
+        assertEquals(2, tm.getEpicById(7).getSubTaskIds().size());
+        int subTaskIdToDelete = tm.getEpicById(7).getSubTaskIds().getFirst();
+        tm.deleteSubTask(subTaskIdToDelete);
+        assertFalse(tm.getEpicById(7).getSubTaskIds().contains(subTaskIdToDelete));
+    }
+
     //Убедитесь, что утилитарный класс всегда возвращает проинициализированные и готовые к работе экземпляры менеджеров
     @Test
-    public void shouldManagerGetCorrectObjectInMemoryTaskManager(){
+    public void shouldManagerGetCorrectObjectInMemoryTaskManager() {
         assertNotNull(tm);
         assertInstanceOf(InMemoryTaskManager.class, tm);
     }
 
     @Test
-    public void shouldManagerGetCorrectObjectInMemoryHistoryManager(){
+    public void shouldManagerGetCorrectObjectInMemoryHistoryManager() {
         HistoryManager hm = Managers.getDefaultHistory();
         assertNotNull(hm);
         assertInstanceOf(InMemoryHistoryManager.class, hm);
@@ -112,24 +120,18 @@ public class InMemoryTaskManagerTest {
         assertEquals("Описание эпика 4", tm.getHistory().get(2).getDescription());
         assertEquals(TaskStatus.IN_PROGRESS, tm.getHistory().getLast().getStatus());
 
-        tm.getTaskById(2);
-        tm.getTaskById(3);
-        tm.getEpicById(7);
-        tm.getEpicById(8);
-        tm.getSubTaskById(12);
+        tm.getTaskById(5);
+        assertEquals(5, tm.getHistory().getLast().getId()); //проверить добавления повторяющегося значения в конец
+        tm.getEpicById(10);
+        assertEquals(10, tm.getHistory().getLast().getId()); //проверить добавления повторяющегося значения в конец
+        tm.getSubTaskById(15);
+        assertEquals(15, tm.getHistory().getLast().getId()); //проверить добавления повторяющегося значения в конец
+        assertEquals(6, tm.getHistory().size()); //проверить удаление дублей
 
-        assertEquals(10, tm.getHistory().size());  //проверяем лимит
-        assertEquals(5, tm.getHistory().getFirst().getId()); //проверяем сдвиг значений списка на один
-        assertEquals(12, tm.getHistory().getLast().getId()); //проверяем добавление элемента вниз
-
-        tm.getSubTaskById(13);
-        assertEquals(10, tm.getHistory().size()); //проверяем лимит
-        assertEquals(9, tm.getHistory().getFirst().getId()); //проверяем сдвиг значений списка на один
-        assertEquals(13, tm.getHistory().getLast().getId()); //проверяем добавление элемента вниз
     }
 
     @Test
-    public void shouldAddTasksToHistoryListCorrectly(){
+    public void shouldAddTasksToHistoryListCorrectly() {
         tm.getTaskById(66);
         assertTrue(tm.getHistory().isEmpty());
 
@@ -142,7 +144,7 @@ public class InMemoryTaskManagerTest {
         tm.getSubTaskById(13);
         tm.getEpicById(7);
         tm.getSubTaskById(13);
-        assertEquals(5, tm.getHistory().size());
+        assertEquals(3, tm.getHistory().size());
     }
 
     //Создайте тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджере.

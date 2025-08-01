@@ -272,8 +272,12 @@ public class Main {
                     }
                 }
                 case 7 -> {
-                    for(Task task : tm.getHistory()) {
-                        System.out.println(task);
+                    if (tm.getHistory().isEmpty()) {
+                        System.out.println("История просмотров пуста!");
+                    } else {
+                        for (Task task : tm.getHistory()) {
+                            System.out.println(task);
+                        }
                     }
                 }
                 case 8 -> {
