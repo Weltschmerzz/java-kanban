@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager tm = Managers.getDefault();
+        TaskManager tm = Managers.getDefault("prod");
         Scanner scanner = new Scanner(System.in);
 
         while (true) {

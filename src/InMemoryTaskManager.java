@@ -199,6 +199,32 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
+    protected void updateIdCounterAfterLoad() {
+        int maxId = 0;
+        for (Task task : getTaskMap().values()) {
+            maxId = Math.max(maxId, task.getId());
+        }
+        for (Epic epic : getEpicMap().values()) {
+            maxId = Math.max(maxId, epic.getId());
+        }
+        for (SubTask subTask : getSubTaskMap().values()) {
+            maxId = Math.max(maxId, subTask.getId());
+        }
+        this.id = maxId;
+    }
+
+    protected Map<Integer, Task> getTaskMap() {
+        return taskList;
+    }
+
+    protected Map<Integer, Epic> getEpicMap() {
+        return epicList;
+    }
+
+    protected Map<Integer, SubTask> getSubTaskMap() {
+        return subTaskList;
+    }
+
     private int getTaskid() {
         id++;
         return id;
