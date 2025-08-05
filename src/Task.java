@@ -15,6 +15,17 @@ public class Task {
         this.status = status;
     }
 
+    public static Task fromFields(String[] fields) {
+        int id = Integer.parseInt(fields[0]);
+        String name = fields[2];
+        TaskStatus status = TaskStatus.valueOf(fields[3]);
+        String description = fields[4];
+
+        Task task = new Task(name, description, status);
+        task.setId(id);
+        return task;
+    }
+
     public int getId() {
         return id;
     }
@@ -37,34 +48,6 @@ public class Task {
 
     void setStatus(TaskStatus status) {
         this.status = status;
-    }
-
-    public static Task fromString(String line) {
-        String[] taskArr = line.split(",", -1);
-        int id = Integer.parseInt(taskArr[0]);
-        TaskType type = TaskType.valueOf(taskArr[1]);
-        String name = taskArr[2];
-        TaskStatus status = TaskStatus.valueOf(taskArr[3]);
-        String description = taskArr[4];
-        switch (type) {
-            case TASK:
-                Task task = new Task(name, description, status);
-                task.setId(id);
-                return task;
-            case EPIC:
-                Epic epic = new Epic(name, description);
-                epic.setId(id);
-                epic.setStatus(status);
-                return epic;
-            case SUBTASK:
-                int epicId = Integer.parseInt(taskArr[5]);
-                SubTask subtask = new SubTask(epicId, name, description, status);
-                subtask.setId(id);
-                return subtask;
-            default:
-                System.out.println("Неизвестный тип задачи: " + type);
-                return null;
-        }
     }
 
     @Override

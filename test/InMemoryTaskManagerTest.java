@@ -1,5 +1,6 @@
 package ru.yandex.practicum.TaskTracker.test;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import ru.yandex.practicum.TaskTracker.src.*;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class InMemoryTaskManagerTest {
     private static TaskManager tm;
 
-
     @BeforeEach
     public void beforeEach() throws IOException {
         Path testFile = Paths.get("storage/test", "test_storage.csv");
@@ -22,6 +22,14 @@ public class InMemoryTaskManagerTest {
             Files.delete(testFile);
         }
         addTestTasks();
+    }
+
+    @AfterEach
+    void AfterEach() throws IOException {
+        Path testFile = Paths.get("storage/test", "test_storage.csv");
+        if (Files.exists(testFile)) {
+            Files.delete(testFile);
+        }
     }
 
     //Убедитесь, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных

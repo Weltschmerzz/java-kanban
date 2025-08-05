@@ -1,11 +1,11 @@
 package ru.yandex.practicum.TaskTracker.test;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import ru.yandex.practicum.TaskTracker.src.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,6 +18,14 @@ public class FileBackedTaskManagerTest {
 
     @BeforeEach
     public void beforeEach() throws IOException {
+        Path testFile = Paths.get("storage/test", "test_storage.csv");
+        if (Files.exists(testFile)) {
+            Files.delete(testFile);
+        }
+    }
+
+    @AfterEach
+    void AfterEach() throws IOException {
         Path testFile = Paths.get("storage/test", "test_storage.csv");
         if (Files.exists(testFile)) {
             Files.delete(testFile);

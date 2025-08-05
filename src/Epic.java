@@ -11,6 +11,18 @@ public class Epic extends Task {
         super(name, description, TaskStatus.NEW);
     }
 
+    public static Epic fromFields(String[] fields) {
+        int id = Integer.parseInt(fields[0]);
+        String name = fields[2];
+        TaskStatus status = TaskStatus.valueOf(fields[3]);
+        String description = fields[4];
+
+        Epic epic = new Epic(name, description);
+        epic.setId(id);
+        epic.setStatus(status);
+        return epic;
+    }
+
     public void addSubTaskId(int subTaskId) {
         subTaskIds.add(subTaskId);
     }

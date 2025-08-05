@@ -10,18 +10,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     private final Path storageFile;
 
-    public FileBackedTaskManager(Path path) throws FileManagerException {
-        storageFile = path;
+    public static FileBackedTaskManager loadFromFile(Path path) {
+        FileBackedTaskManager fileManager = new FileBackedTaskManager(path);
 
-        if (Files.exists(path)) {
-            loadFromFile();
+        if (Files.exists(fileManager.storageFile)) {
+            fileManager.load();
         } else {
             try {
-                createTemplateCSV(storageFile);
+                fileManager.createTemplateCSV(fileManager.storageFile);
             } catch (FileManagerException e) {
                 System.out.println(e.getMessage() + "\nПричина: " + e.getCause());
             }
         }
+        return fileManager;
+    }
+
+    public FileBackedTaskManager(Path path) throws FileManagerException {
+        storageFile = path;
     }
 
     @Override
@@ -116,26 +121,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    private Path getStorageFile() {
-        return storageFile;
-    }
-
-    private void loadFromFile() throws FileManagerException {
+    private void load() throws FileManagerException {
         try {
-            List<String> rows = Files.readAllLines(getStorageFile());
+            List<String> rows = Files.readAllLines(storageFile);
             for (int i = 1; i < rows.size(); i++) {
                 String line = rows.get(i);
                 if (line.isEmpty()) {
                     continue;
                 }
-                Task task = Task.fromString(line);
+                Task task = fromString(line);
                 restore(task);
             }
             updateIdCounterAfterLoad();
         } catch (IOException e) {
             throw new FileManagerException("Ошибка при чтении CSV-файла", e);
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | IllegalArgumentException e) {
             throw new FileManagerException("Ошибка восстановления данных из файла", e);
+        }
+    }
+
+    public Task fromString(String line) throws IllegalArgumentException {
+        String[] fields = line.split(",");
+        TaskType type = TaskType.valueOf(fields[1]);
+
+        switch (type) {
+            case TASK:
+                return Task.fromFields(fields);
+            case EPIC:
+                return Epic.fromFields(fields);
+            case SUBTASK:
+                return SubTask.fromFields(fields);
+            default:
+                throw new IllegalArgumentException("Неизвестный тип задачи: " + type);
         }
     }
 

@@ -13,6 +13,18 @@ public class SubTask extends Task {
         this.epicId = epicId;
     }
 
+    public static SubTask fromFields(String[] fields) {
+        int id = Integer.parseInt(fields[0]);
+        String name = fields[2];
+        TaskStatus status = TaskStatus.valueOf(fields[3]);
+        String description = fields[4];
+        int epicId = Integer.parseInt(fields[5]);
+
+        SubTask subtask = new SubTask(epicId, name, description, status);
+        subtask.setId(id);
+        return subtask;
+    }
+
     public int getEpicId() {
         return epicId;
     }

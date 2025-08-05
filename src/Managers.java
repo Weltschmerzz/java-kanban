@@ -11,10 +11,10 @@ public abstract class Managers {
 
         switch (environment) {
             case "prod" -> {
-                return new FileBackedTaskManager(prod);
+                return FileBackedTaskManager.loadFromFile(prod);
             }
             case "test" -> {
-                return new FileBackedTaskManager(test);
+                return FileBackedTaskManager.loadFromFile(test);
             }
             default -> {
                 System.out.println("Задано некорректное окружение: " + environment);
