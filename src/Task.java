@@ -15,6 +15,17 @@ public class Task {
         this.status = status;
     }
 
+    public static Task fromFields(String[] fields) {
+        int id = Integer.parseInt(fields[0]);
+        String name = fields[2];
+        TaskStatus status = TaskStatus.valueOf(fields[3]);
+        String description = fields[4];
+
+        Task task = new Task(name, description, status);
+        task.setId(id);
+        return task;
+    }
+
     public int getId() {
         return id;
     }
@@ -54,11 +65,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return "{" +
-                "Id=" + id +
-                ", Name='" + name + '\'' +
-                ", Description='" + description + '\'' +
-                ", Status=" + status +
-                '}';
+        return id + "," + "TASK" + "," + name + "," + status + "," + description + ",";
     }
+
+
 }
