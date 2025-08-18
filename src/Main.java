@@ -1,8 +1,14 @@
 package ru.yandex.practicum.TaskTracker.src;
 
+import java.time.Duration;
 import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Main {
+
+    private static final DateTimeFormatter CLI_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     public static void main(String[] args) {
         TaskManager tm = Managers.getDefault("prod");
@@ -37,24 +43,33 @@ public class Main {
                         }
                     }
 
-                    System.out.print("Введите имя задачи: ");
+                    System.out.print("Введите имя: ");
                     String name = scanner.nextLine();
-                    System.out.print("Введите описание задачи: ");
+                    System.out.print("Введите описание: ");
                     String desc = scanner.nextLine();
 
                     if (taskType == TaskType.TASK) {
                         TaskStatus status = selectTaskStatus(scanner);
-                        Task newTask = new Task(name, desc, status);
+                        Duration duration = getDuration(scanner);
+                        LocalDateTime startTime = getStartTime(scanner);
+
+                        Task newTask = new Task(name, desc, status, startTime, duration);
                         tm.createTask(newTask);
+
                     } else if (taskType == TaskType.EPIC) {
                         Epic newEpic = new Epic(name, desc);
                         tm.createEpic(newEpic);
+
                     } else if (taskType == TaskType.SUBTASK) {
                         TaskStatus status = selectTaskStatus(scanner);
-                        SubTask newSubTask = new SubTask(tm.getEpicById(epicId), name, desc, status);
+                        Duration duration = getDuration(scanner);
+                        LocalDateTime startTime = getStartTime(scanner);
+
+                        SubTask newSubTask = new SubTask(tm.getEpicById(epicId), name, desc, status, startTime, duration);
                         tm.createSubTask(newSubTask);
                     }
                 }
+
                 case 2 -> {
                     TaskType taskType = selectTaskType(scanner);
                     while (taskType == null) {
@@ -184,17 +199,20 @@ public class Main {
                     if (taskType == TaskType.TASK) {
                         int taskId = getTaskId(scanner);
                         if (!tm.getTaskList().contains(tm.getTaskById(taskId))) {
-                            System.out.println("Задача с ID:" + taskId + " не найден.");
+                            System.out.println("Задача с ID:" + taskId + " не найдена.");
                             System.out.println("*".repeat(25));
                             break;
                         }
 
-                        System.out.print("Введите новое имя задачи: ");
+                        System.out.print("Введите новое имя: ");
                         String taskName = scanner.nextLine();
-                        System.out.print("Введите новое описание задачи: ");
+                        System.out.print("Введите новое описание: ");
                         String taskDesc = scanner.nextLine();
                         TaskStatus taskStatus = selectTaskStatus(scanner);
-                        Task updatedTask = new Task(taskName, taskDesc, taskStatus);
+                        Duration duration = getDuration(scanner);
+                        LocalDateTime startTime = getStartTime(scanner);
+
+                        Task updatedTask = new Task(taskName, taskDesc, taskStatus, startTime, duration);
                         updatedTask.setId(taskId);
                         tm.updateTask(updatedTask);
 
@@ -209,6 +227,7 @@ public class Main {
                         String epicName = scanner.nextLine();
                         System.out.print("Введите новое описание эпика: ");
                         String epicDesc = scanner.nextLine();
+
                         Epic updatedEpic = new Epic(epicName, epicDesc);
                         updatedEpic.setId(epicId);
                         tm.updateEpic(updatedEpic);
@@ -220,13 +239,17 @@ public class Main {
                             System.out.println("*".repeat(25));
                             break;
                         }
-                        System.out.print("Введите новое имя подзадачи: ");
+
+                        System.out.print("Введите новое имя: ");
                         String subTaskName = scanner.nextLine();
-                        System.out.print("Введите новое описание подзадачи: ");
+                        System.out.print("Введите новое описание: ");
                         String subTaskDesc = scanner.nextLine();
                         TaskStatus subTaskStatus = selectTaskStatus(scanner);
-                        SubTask updatedSubTask = new SubTask(tm.getEpicById(tm.getSubTaskById(subTaskId).getEpicId()),
-                                subTaskName, subTaskDesc, subTaskStatus);
+                        Duration duration = getDuration(scanner);
+                        LocalDateTime startTime = getStartTime(scanner);
+
+                        int epicIdOfSub = tm.getSubTaskById(subTaskId).getEpicId();
+                        SubTask updatedSubTask = new SubTask(tm.getEpicById(epicIdOfSub), subTaskName, subTaskDesc, subTaskStatus, startTime, duration);
                         updatedSubTask.setId(subTaskId);
                         tm.updateSubTask(updatedSubTask);
                     }
@@ -281,6 +304,11 @@ public class Main {
                     }
                 }
                 case 8 -> {
+                    for (Task task : tm.getPrioritizedTasks()) {
+                        System.out.println(task);
+                    }
+                }
+                case 9 -> {
                     return;
                 }
                 default -> System.out.println("Такого пункта нет в меню.");
@@ -297,7 +325,8 @@ public class Main {
         System.out.println("5. Обновить задачу по ID.");
         System.out.println("6. Удалить задачу по ID.");
         System.out.println("7. История просмотров.");
-        System.out.println("8. Выход.");
+        System.out.println("8. Показать задачи в порядке приоритета.");
+        System.out.println("9. Выход.");
     }
 
     private static TaskType selectTaskType(Scanner sc) {
@@ -343,6 +372,34 @@ public class Main {
                     return TaskStatus.DONE;
                 }
                 default -> System.out.println("Неверное значение статуса. Повторите попытку.");
+            }
+        }
+    }
+
+    private static Duration getDuration(Scanner sc) {
+        while (true) {
+            System.out.print("Введите длительность задачи в минутах: ");
+            String line = sc.nextLine().trim();
+            try {
+                int minutes = Integer.parseInt(line);
+                if (minutes > 0) {
+                    return Duration.ofMinutes(minutes);
+                }
+                System.out.println("Длительность должна быть больше нуля.");
+            } catch (NumberFormatException e) {
+                System.out.println("Неверный формат. Введите целое число минут.");
+            }
+        }
+    }
+
+    private static LocalDateTime getStartTime(Scanner sc) {
+        while (true) {
+            System.out.print("Введите дату старта в формате \"yyyy-MM-dd'T'HH:mm\" (например, 2025-08-16T10:30): ");
+            String line = sc.nextLine().trim();
+            try {
+                return LocalDateTime.parse(line, CLI_DATE_TIME);
+            } catch (DateTimeParseException e) {
+                System.out.println("Неверный формат даты/времени. Повторите ввод.");
             }
         }
     }

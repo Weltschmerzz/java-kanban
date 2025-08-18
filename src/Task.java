@@ -1,5 +1,8 @@
 package ru.yandex.practicum.TaskTracker.src;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -8,6 +11,17 @@ public class Task {
     private final String name;
     private final String description;
     private TaskStatus status;
+    private Duration duration;
+    private LocalDateTime startTime;
+    static final DateTimeFormatter CSV_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+    public Task(String name, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
 
     public Task(String name, String description, TaskStatus status) {
         this.name = name;
@@ -20,8 +34,13 @@ public class Task {
         String name = fields[2];
         TaskStatus status = TaskStatus.valueOf(fields[3]);
         String description = fields[4];
+        String StrDuration = fields[6];
+        String strStartTime = fields[7];
 
-        Task task = new Task(name, description, status);
+        Duration duration = StrDuration.isBlank() ? null : Duration.ofMinutes(Long.parseLong(StrDuration));
+        LocalDateTime startTime = strStartTime.isBlank() ? null : LocalDateTime.parse(strStartTime, CSV_DATE_TIME);
+
+        Task task = new Task(name, description, status, startTime, duration);
         task.setId(id);
         return task;
     }
@@ -50,6 +69,19 @@ public class Task {
         this.status = status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) return null;
+        return startTime.plus(duration);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,7 +97,9 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + "," + "TASK" + "," + name + "," + status + "," + description + ",";
+        return id + "," + TaskType.TASK + "," + name + "," + status + "," + description + "," + "" + ","
+                + (duration == null ? "" : duration.toMinutes()) + ","
+                + (startTime == null ? "" : startTime.format(CSV_DATE_TIME));
     }
 
 
