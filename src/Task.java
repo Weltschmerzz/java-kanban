@@ -34,10 +34,10 @@ public class Task {
         String name = fields[2];
         TaskStatus status = TaskStatus.valueOf(fields[3]);
         String description = fields[4];
-        String StrDuration = fields[6];
+        String strDuration = fields[6];
         String strStartTime = fields[7];
 
-        Duration duration = StrDuration.isBlank() ? null : Duration.ofMinutes(Long.parseLong(StrDuration));
+        Duration duration = strDuration.isBlank() ? null : Duration.ofMinutes(Long.parseLong(strDuration));
         LocalDateTime startTime = strStartTime.isBlank() ? null : LocalDateTime.parse(strStartTime, CSV_DATE_TIME);
 
         Task task = new Task(name, description, status, startTime, duration);
