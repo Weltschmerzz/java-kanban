@@ -22,10 +22,10 @@ public class SubTask extends Task {
         TaskStatus status = TaskStatus.valueOf(fields[3]);
         String description = fields[4];
         int epicId = Integer.parseInt(fields[5]);
-        String StrDuration = fields[6];
+        String strDuration = fields[6];
         String strStartTime = fields[7];
 
-        Duration duration = StrDuration.isBlank() ? null : Duration.ofMinutes(Long.parseLong(StrDuration));
+        Duration duration = strDuration.isBlank() ? null : Duration.ofMinutes(Long.parseLong(strDuration));
         LocalDateTime startTime = strStartTime.isBlank() ? null : LocalDateTime.parse(strStartTime, CSV_DATE_TIME);
 
         SubTask subtask = new SubTask(name, description, status, startTime, duration, epicId);
