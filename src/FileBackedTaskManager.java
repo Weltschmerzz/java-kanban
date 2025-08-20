@@ -113,7 +113,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
             if (!Files.exists(filePath)) {
                 try (Writer writer = new OutputStreamWriter(new FileOutputStream(storageFile.toFile()), StandardCharsets.UTF_8)) {
-                    writer.write("id,type,name,status,description,epic\n");
+                    writer.write("id,type,name,status,description,epic,duration,startTime\n");
                 }
             }
         } catch (IOException e) {
@@ -133,6 +133,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 restore(task);
             }
             updateIdCounterAfterLoad();
+
+            for (Epic e : getEpicList()) {
+                epicCalculate(e.getId());
+            }
+
+            remakePrioritizedTaskSet();
+
         } catch (IOException e) {
             throw new FileManagerException("Ошибка при чтении CSV-файла", e);
         } catch (NullPointerException | IllegalArgumentException e) {
@@ -158,7 +165,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     private void save() {
         try (Writer writer = new OutputStreamWriter(new FileOutputStream(storageFile.toFile()), StandardCharsets.UTF_8)) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,epic,duration,startTime\n");
 
             for (Task task : getTaskList()) {
                 writer.write(task.toString() + "\n");
