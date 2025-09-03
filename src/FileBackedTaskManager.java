@@ -164,23 +164,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     private void save() {
-        try (Writer writer = new OutputStreamWriter(new FileOutputStream(storageFile.toFile()), StandardCharsets.UTF_8)) {
-            writer.write("id,type,name,status,description,epic,duration,startTime\n");
-
-            for (Task task : getTaskList()) {
-                writer.write(task.toString() + "\n");
+        try {
+            if (!Files.exists(storageFile)) {
+                createTemplateCSV(storageFile);
+            } else {
+                Files.createDirectories(storageFile.getParent());
             }
 
-            for (Epic epic : getEpicList()) {
-                writer.write(epic.toString() + "\n");
-            }
+            try (Writer writer = new OutputStreamWriter(
+                    new FileOutputStream(storageFile.toFile()), StandardCharsets.UTF_8)) {
+                writer.write("id,type,name,status,description,epic,duration,startTime\n");
 
-            for (SubTask subTask : getSubTaskList()) {
-                writer.write(subTask.toString() + "\n");
+                for (Task t : getTaskMap().values()) {
+                    writer.write(t.toString());
+                    writer.write('\n');
+                }
+                for (Epic e : getEpicMap().values()) {
+                    writer.write(e.toString());
+                    writer.write('\n');
+                }
+                for (SubTask s : getSubTaskMap().values()) {
+                    writer.write(s.toString());
+                    writer.write('\n');
+                }
             }
-
         } catch (IOException e) {
-            System.out.println("Ошибка при записи в CSV-файл: " + e.getMessage());
+            e.printStackTrace();
+            throw new FileManagerException("Ошибка при записи CSV-файла", e);
         }
     }
 
