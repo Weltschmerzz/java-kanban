@@ -8,7 +8,7 @@ import java.time.format.DateTimeParseException;
 
 public class Main {
 
-    private static final DateTimeFormatter CLI_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    private static final DateTimeFormatter CLI_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static void main(String[] args) {
         TaskManager tm = Managers.getDefault("prod");
@@ -394,7 +394,7 @@ public class Main {
 
     private static LocalDateTime getStartTime(Scanner sc) {
         while (true) {
-            System.out.print("Введите дату старта в формате \"yyyy-MM-dd'T'HH:mm\" (например, 2025-08-16T10:30): ");
+            System.out.print("Введите дату старта в формате \"yyyy-MM-dd HH:mm:ss\" (например, 2025-08-16 10:30:22): ");
             String line = sc.nextLine().trim();
             try {
                 return LocalDateTime.parse(line, CLI_DATE_TIME);

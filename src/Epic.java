@@ -8,9 +8,9 @@ import java.util.List;
 public class Epic extends Task {
 
     private final List<Integer> subTaskIds = new ArrayList<>();
-    private Duration duration;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private Duration durationEpic = Duration.ZERO;
+    private LocalDateTime startTimeEpic;
+    private LocalDateTime endTimeEpic;
 
     public Epic(String name, String description) {
         super(name, description, TaskStatus.NEW);
@@ -30,25 +30,25 @@ public class Epic extends Task {
 
     @Override
     public LocalDateTime getEndTime() {
-        return endTime;
+        return endTimeEpic;
     }
 
     @Override
     public Duration getDuration() {
-        return duration;
+        return durationEpic;
     }
 
     @Override
     public LocalDateTime getStartTime() {
-        return startTime;
+        return startTimeEpic;
     }
 
     public void setDuration(Duration duration) {
-        this.duration = duration;
+        this.durationEpic = duration;
     }
 
     public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+        this.startTimeEpic = startTime;
     }
 
     public void addSubTaskId(int subTaskId) {
@@ -72,14 +72,14 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return this.getId() + "," + TaskType.EPIC + "," + this.getName() + "," + this.getStatus() + "," + this.getDescription() + "" + ","
-                + (this.duration == null ? "" : duration.toMinutes()) + ","
-                + (this.startTime == null ? "" : startTime.format(CSV_DATE_TIME));
+                + (this.durationEpic == null ? "" : durationEpic.toMinutes()) + ","
+                + (this.startTimeEpic == null ? "" : startTimeEpic.format(CSV_DATE_TIME));
     }
 
     void setCalculatedTime(LocalDateTime start, LocalDateTime end, Duration duration) {
-        this.startTime = start;
-        this.endTime = end;
-        this.duration = duration;
+        this.startTimeEpic = start;
+        this.endTimeEpic = end;
+        this.durationEpic = duration;
     }
 }
 

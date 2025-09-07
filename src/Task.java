@@ -13,7 +13,7 @@ public class Task {
     private TaskStatus status;
     private Duration duration;
     private LocalDateTime startTime;
-    static final DateTimeFormatter CSV_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+    static final DateTimeFormatter CSV_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Task(String name, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
         this.name = name;

@@ -33,29 +33,34 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createEpic(Epic newEpic) {
-        int newTaskid = getTaskid();
-        newEpic.setId(newTaskid);
-        epicList.put(newTaskid, newEpic);
-        System.out.println("Эпик с ID:" + newTaskid + " успешно создан!");
+        int newId = getTaskid();
+        newEpic.setId(newId);
+
+        epicList.put(newId, newEpic);
+        epicCalculate(newId);
+        System.out.println("Эпик с ID:" + newId + " успешно создан!");
 
     }
 
     @Override
     public void createSubTask(SubTask newSubTask) {
-        if (Objects.equals(newSubTask.getId(), newSubTask.getEpicId())) {
-            System.out.println("Эпик не может быть собственной подзадачей");
-            return;
-        }
+        if (newSubTask == null) throw new IllegalArgumentException("subtask is null");
+        Epic parantEpic = epicList.get(newSubTask.getEpicId());
+        if (parantEpic == null) throw new IllegalArgumentException("Эпик не найден: id=" + newSubTask.getEpicId());
+        if (Objects.equals(newSubTask.getId(), newSubTask.getEpicId()))
+            throw new IllegalArgumentException("Эпик не может быть собственной подзадачей");
+
         int newSubTaskid = getTaskid();
         newSubTask.setId(newSubTaskid);
 
-        if (hasTaskAnyIntersects(newSubTask)) {
+        if (hasTaskAnyIntersects(newSubTask))
             throw new IllegalStateException("Конфликт: пересечений по времени с существующей задачей!");
-        }
 
         subTaskList.put(newSubTaskid, newSubTask);
         prioritizeTaskSet(newSubTask);
-        epicList.get(newSubTask.getEpicId()).addSubTaskId(newSubTaskid);
+
+        parantEpic.addSubTaskId(newSubTaskid);
+
         epicCalculate(newSubTask.getEpicId());
         System.out.println("Подзадача с ID:" + newSubTaskid + "успешно создана!");
     }
@@ -175,14 +180,28 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic updatedEpic) {
-        updatedEpic.setSubTaskIds(epicList.get(updatedEpic.getId()).getSubTaskIds());
-        epicList.put(updatedEpic.getId(), updatedEpic);
-        epicCalculate(updatedEpic.getId());
+        Epic existingEpic = epicList.get(updatedEpic.getId());
+
+        if (existingEpic == null) {
+            return;
+        }
+
+        Epic merged = new Epic(updatedEpic.getName(), updatedEpic.getDescription());
+        merged.setId(existingEpic.getId());
+        merged.setSubTaskIds(existingEpic.getSubTaskIds());
+
+        epicList.put(merged.getId(), merged);
+        epicCalculate(merged.getId());
     }
 
     @Override
     public void updateSubTask(SubTask updatedSubTask) {
+        if (updatedSubTask == null) throw new IllegalArgumentException("subtask is null");
+
         SubTask oldSubTask = subTaskList.get(updatedSubTask.getId());
+        if (oldSubTask == null)
+            throw new IllegalArgumentException("Подзадача не найдена: id=" + updatedSubTask.getId());
+
         removeFromPrioritized(oldSubTask);
 
         if (hasTaskAnyIntersects(updatedSubTask)) {
@@ -232,20 +251,29 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int taskId) {
-        historyManager.add(taskList.get(taskId));
-        return taskList.get(taskId);
+        Task task = taskList.get(taskId);
+        if (task != null) {
+            historyManager.add(task);
+        }
+        return task;
     }
 
     @Override
     public Epic getEpicById(int epicId) {
-        historyManager.add(epicList.get(epicId));
-        return epicList.get(epicId);
+        Epic epic = epicList.get(epicId);
+        if (epic != null) {
+            historyManager.add(epicList.get(epicId));
+        }
+        return epic;
     }
 
     @Override
     public SubTask getSubTaskById(int subTaskId) {
-        historyManager.add(subTaskList.get(subTaskId));
-        return subTaskList.get(subTaskId);
+        SubTask subTask = subTaskList.get(subTaskId);
+        if (subTask != null) {
+            historyManager.add(subTaskList.get(subTaskId));
+        }
+        return subTask;
     }
 
     @Override

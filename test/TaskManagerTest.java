@@ -80,10 +80,24 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldRejectAddEpicInItsSubTaskList() {
         Epic epic = tm.getEpicById(7);
-        SubTask invalid = new SubTask(epic, "NewTestSubTask", "NewTestSubTaskDescription",
-                TaskStatus.NEW, base.plusHours(6), Duration.ofMinutes(120));
-        invalid.setId(7); // совпадает с epicId
-        tm.createSubTask(invalid);
+
+        SubTask invalid = new SubTask(
+                epic,
+                "NewTestSubTask",
+                "NewTestSubTaskDescription",
+                TaskStatus.NEW,
+                base.plusHours(6),
+                Duration.ofMinutes(120));
+        invalid.setId(epic.getId()); // = 7 — совпадает с epicId
+
+        IllegalArgumentException ex = org.junit.jupiter.api.Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> tm.createSubTask(invalid),
+                "Ожидали IllegalArgumentException, когда эпик становится собственной подзадачей");
+
+        org.junit.jupiter.api.Assertions.assertTrue(
+                ex.getMessage() == null || ex.getMessage().contains("собственной подзадачей"),
+                "Сообщение исключения должно указывать на запрет self-subtask");
         assertNull(tm.getSubTaskById(7));
         assertEquals(5, tm.getSubTaskList().size());
     }
